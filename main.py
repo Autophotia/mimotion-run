@@ -48,10 +48,17 @@ class MiMotion():
             send_data = {"chat_id": tg_user_id, "text": "【小米运动步数修改】\n" + msg, "disable_web_page_preview": "true"}
             response = requests.post(
                 url=f'https://api.telegram.org/bot{tg_bot_token}/sendMessage', data=send_data)
-            print(response.json()['ok'])
+            if response.status_code == 200:
+                result = response.json()
+                if result.get('ok'):
+                    print("Telegram 推送成功")
+                else:
+                    print(f"Telegram 推送失败: {result.get('description')}")
+            else:
+                print(f"Telegram API 请求失败，状态码: {response.status_code}")
         except Exception as e:
             error_traceback = traceback.format_exc()
-            print(error_traceback)
+            print(f"Telegram 推送异常: {error_traceback}")
 
     # 企业微信
     def get_access_token(self):
