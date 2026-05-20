@@ -11,12 +11,17 @@ on:
     types: started
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout codes
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
       - name: Update system and install zsh
         run: |
           sudo -E apt-get -qq update
@@ -25,7 +30,7 @@ jobs:
       - name: 初始化Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.8
+          python-version: "3.8"
       - name: 开始
         env:
           CONFIG: ${{ secrets.CONFIG }}
